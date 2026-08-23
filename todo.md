@@ -19,7 +19,7 @@
 - [x] Tulis README.md dan panduan instalasi APK
 - [x] Tambahkan workflow GitHub Actions untuk lint, typecheck, test, dan build APK
 - [x] Jalankan lint, typecheck, unit test, dan validasi bundle
-- [ ] Build APK release yang dapat diunduh
-- [ ] Buat repo GitHub privat Setankober.cctv
-- [ ] Unggah source code, dokumentasi, workflow, dan APK ke GitHub
+- [ ] Build APK release yang dapat diunduh — menunggu akun EAS dengan izin membuat atau mengakses project
+- [x] Buat repo GitHub privat Setankober.cctv
+- [x] Unggah source code, dokumentasi, dan workflow ke GitHub — APK menunggu build EAS
 - [ ] Simpan checkpoint akhir dan serahkan tautan repo serta APK
