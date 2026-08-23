@@ -1,0 +1,25 @@
+# Project TODO
+
+- [x] Inisialisasi proyek Expo mobile Setankober.cctv
+- [x] Tetapkan batas penggunaan defensif dan larangan eksploitasi
+- [x] Tulis rencana desain portrait satu tangan di design.md
+- [x] Buat logo aplikasi Setankober.cctv dan sinkronkan konfigurasi branding
+- [x] Bangun Dashboard ringkasan jaringan dan kamera
+- [x] Bangun onboarding persetujuan otorisasi
+- [x] Bangun audit jaringan lokal terbatas tanpa eksploitasi
+- [x] Bangun daftar perangkat dan filter hasil audit
+- [x] Bangun CRUD kamera milik pengguna dengan secure storage
+- [x] Bangun pengujian koneksi RTSP yang hanya memakai URL/kredensial pengguna
+- [x] Bangun Live Viewer dengan status koneksi dan kontrol berhenti
+- [x] Bangun Audit Log dan retensi lokal
+- [x] Bangun Settings, Safety Center, Privacy, dan License screen
+- [x] Tambahkan server API defensif untuk sinkronisasi opsional dan health check
+- [x] Tambahkan LICENSE
+- [x] Tambahkan CHANGELOG.md
+- [x] Tulis README.md dan panduan instalasi APK
+- [x] Tambahkan workflow GitHub Actions untuk lint, typecheck, test, dan build APK
+- [x] Jalankan lint, typecheck, unit test, dan validasi bundle
+- [ ] Build APK release yang dapat diunduh
+- [ ] Buat repo GitHub privat Setankober.cctv
+- [ ] Unggah source code, dokumentasi, workflow, dan APK ke GitHub
+- [ ] Simpan checkpoint akhir dan serahkan tautan repo serta APK
