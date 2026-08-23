@@ -40,3 +40,13 @@
 - [x] Upload debug APK as GitHub Actions artifact and optional Release asset
 - [x] Document APK download and release signing prerequisites
 - [ ] Run local Gradle/debug APK validation and update checkpoint — local sandbox kehabisan memori; validasi utama dilakukan di GitHub runner
+
+## Requested update — audit and professional hardening
+
+- [ ] Audit GitHub Actions terbaru, status artifact APK, dan error lokal
+- [ ] Tambahkan health/status panel untuk build dan perangkat
+- [ ] Tambahkan export audit log yang aman dan dapat dibagikan tanpa kredensial
+- [ ] Tambahkan filter, severity, dan detail hasil scan yang lebih profesional
+- [ ] Tambahkan error boundary, empty/loading states, dan retry yang jelas
+- [ ] Perbarui README, CHANGELOG, dan workflow bila diperlukan
+- [ ] Jalankan seluruh validasi dan commit/push perubahan ke GitHub
