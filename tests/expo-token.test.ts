@@ -5,7 +5,7 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 
 describe("EXPO_TOKEN", () => {
-  it("authenticates through the official EAS API client when configured", async () => {
+  it.skipIf(!process.env.EXPO_TOKEN)("authenticates through the official EAS API client when configured", async () => {
     const token = process.env.EXPO_TOKEN;
     expect(token, "EXPO_TOKEN belum tersedia").toBeTruthy();
     const { stdout } = await execFileAsync("pnpm", ["dlx", "eas-cli@latest", "whoami"], {

@@ -33,7 +33,7 @@ pnpm dev:metro
 
 ## Build APK
 
-Build release direkomendasikan melalui GitHub Actions dengan EAS Build. Tambahkan secret repository `EXPO_TOKEN` dari akun Expo yang memiliki izin membuat atau mengakses project EAS, tautkan project dengan `pnpm dlx eas-cli@latest init --account <akun-anda>`, lalu jalankan workflow **Android APK** dari tab Actions. Workflow akan menghasilkan artifact APK yang dapat diunduh dari halaman run. Token yang tersedia saat pengembangan ini berhasil diautentikasi, tetapi akun team yang terhubung hanya memiliki role Viewer sehingga project EAS baru belum dapat dibuat otomatis. Untuk build lokal pengembangan, jalankan `pnpm android` dengan emulator atau perangkat Android yang terhubung.
+Build APK sekarang memakai **native Gradle langsung di GitHub Actions tanpa EAS**. Jalankan workflow **Android APK (Native Gradle)** dari tab Actions. Setelah selesai, buka halaman workflow run dan unduh artifact `Setankober-cctv-debug-apk`. Jika Anda membuat tag `v1.0.1`, workflow juga mengunggah APK sebagai asset pada GitHub Release. APK debug cocok untuk pengujian perangkat; release production memerlukan signing keystore yang disimpan sebagai GitHub Secrets. Build lokal dapat dicoba dengan `cd android && ./gradlew assembleDebug`, tetapi runner GitHub direkomendasikan karena membutuhkan memori lebih besar.
 
 ## Struktur singkat
 

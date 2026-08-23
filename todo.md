@@ -32,3 +32,11 @@
 - [x] Tampilkan progres, perangkat ditemukan, status port terbatas, cancel, timeout, dan audit log hasil scan
 - [x] Tambahkan unit test untuk validasi scope jaringan, batas concurrency, dan penolakan host publik
 - [x] Jalankan verifikasi screenshot responsif dan regresi build APK
+
+## Requested update — native GitHub APK build without EAS
+
+- [x] Generate/configure native Android Gradle project for Expo SDK 54
+- [x] Replace EAS-dependent workflow with native Gradle APK workflow
+- [x] Upload debug APK as GitHub Actions artifact and optional Release asset
+- [x] Document APK download and release signing prerequisites
+- [ ] Run local Gradle/debug APK validation and update checkpoint — local sandbox kehabisan memori; validasi utama dilakukan di GitHub runner
