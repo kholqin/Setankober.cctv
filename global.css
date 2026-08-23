@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --color-primary: #00F5B8;
+  --color-background: #050A0A;
+  --color-surface: #0B1717;
+  --color-foreground: #E9FFFA;
+  --color-muted: #7CA59D;
+  --color-border: #163A38;
+  --color-success: #35FF8A;
+  --color-warning: #FFCC66;
+  --color-error: #FF5577;
+  color-scheme: dark;
+  background: #050A0A;
+}
+
+html,
+body,
+#__root {
+  background: #050A0A;
+  color: #E9FFFA;
+}
+
+/* React Native Web Text nodes do not always inherit CSS variables. Keep console copy readable. */
+#root div, #root span, #__root div, #__root span { color: #E9FFFA; }
+#root .text-muted, #__root .text-muted { color: #7CA59D; }
+#root .text-primary, #__root .text-primary { color: #00F5B8; }
+#root .text-error, #__root .text-error { color: #FF5577; }

@@ -23,3 +23,12 @@
 - [x] Buat repo GitHub privat Setankober.cctv
 - [x] Unggah source code, dokumentasi, dan workflow ke GitHub — APK menunggu build EAS
 - [ ] Simpan checkpoint akhir dan serahkan tautan repo serta APK
+
+## Requested update — dark cyber, responsive, scanning
+
+- [x] Redesign theme menjadi dark cyber yang terbaca dan konsisten di Android portrait, landscape, dan web preview
+- [x] Perbaiki layout responsif untuk dashboard, devices, cameras, settings, dan viewer
+- [x] Tambahkan pemindaian jaringan lokal berizin yang non-destruktif dan memiliki guardrail otorisasi
+- [x] Tampilkan progres, perangkat ditemukan, status port terbatas, cancel, timeout, dan audit log hasil scan
+- [x] Tambahkan unit test untuk validasi scope jaringan, batas concurrency, dan penolakan host publik
+- [x] Jalankan verifikasi screenshot responsif dan regresi build APK

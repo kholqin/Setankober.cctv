@@ -1,15 +1,35 @@
 
-import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { useRef, useState } from "react";
+import { Alert, ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useCctv } from "@/lib/cctv-context";
 import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
+import { scanAuthorizedNetwork, type ScanResult } from "@/lib/network-scan";
 
 export default function HomeScreen() {
   const colors = useColors();
   const router = useRouter();
   const { cameras, audits, authorized, setAuthorized, addAudit } = useCctv();
   const scope = "Jaringan privat perangkat ini";
+  const [cidr, setCidr] = useState("192.168.1.0/29");
+  const [scanState, setScanState] = useState<"idle" | "scanning" | "done">("idle");
+  const [progress, setProgress] = useState({ completed: 0, total: 0 });
+  const [scanResults, setScanResults] = useState<ScanResult[]>([]);
+  const scanRun = useRef(0);
+
+  const runScan = async () => {
+    if (!authorized) { Alert.alert("Scan dikunci", "Aktifkan otorisasi untuk jaringan privat Anda terlebih dahulu."); return; }
+    scanRun.current += 1;
+    const runId = scanRun.current;
+    try {
+      setScanState("scanning"); setScanResults([]); setProgress({ completed: 0, total: 0 });
+      const results = await scanAuthorizedNetwork(cidr, (completed, total) => { if (runId === scanRun.current) setProgress({ completed, total }); });
+      if (runId === scanRun.current) { setScanResults(results.filter((item) => item.status === "online")); setScanState("done"); await addAudit(`Scan lokal ${cidr}`); }
+    } catch (error) { setScanState("idle"); Alert.alert("Scope tidak valid", error instanceof Error ? error.message : "Masukkan CIDR privat yang valid."); }
+  };
+
+  const cancelScan = () => { scanRun.current += 1; setScanState("idle"); setProgress({ completed: 0, total: 0 }); };
 
   const runAudit = async () => {
     await addAudit(scope);
@@ -47,6 +67,14 @@ export default function HomeScreen() {
           <Metric label="Status" value={authorized ? "Siap" : "Kunci"} icon="SAFE" colors={colors} />
         </View>
 
+        <View style={[styles.scanCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View className="flex-row items-center justify-between"><View><Text style={[styles.eyebrow, { color: colors.primary }]}>LOCAL DISCOVERY</Text><Text className="mt-1 text-base font-bold text-foreground">Scan jaringan berizin</Text></View>{scanState === "scanning" ? <ActivityIndicator color={colors.primary} /> : <Text style={{ color: colors.muted, fontSize: 11 }}>{scanResults.length} online</Text>}</View>
+          <TextInput value={cidr} onChangeText={setCidr} editable={scanState !== "scanning"} autoCapitalize="none" autoCorrect={false} placeholder="192.168.1.0/29" placeholderTextColor={colors.muted} style={[styles.cidrInput, { borderColor: colors.border, color: colors.foreground }]} />
+          {scanState === "scanning" && <Text className="mt-2 text-xs text-muted">Memeriksa {progress.completed}/{progress.total} endpoint aman. Concurrency dibatasi 4 dan timeout 700 ms.</Text>}
+          <View className="mt-3 flex-row gap-2"><Pressable onPress={scanState === "scanning" ? cancelScan : runScan} style={({ pressed }) => [styles.scanButton, { backgroundColor: scanState === "scanning" ? colors.warning : colors.primary }, pressed && styles.pressed]}><Text style={styles.primaryButtonText}>{scanState === "scanning" ? "Batalkan scan" : "Scan jaringan privat"}</Text></Pressable></View>
+          {scanState === "done" && <><Text className="mt-2 text-xs text-muted">Selesai. Hanya host privat dan port HTTP terbatas yang diperiksa; tidak ada kredensial yang dicoba.</Text><View className="mt-2 gap-1">{scanResults.slice(0, 6).map((item) => <Text key={`${item.host}:${item.port}`} className="text-xs text-foreground">● {item.host}:{item.port} · {item.latencyMs ?? 0} ms</Text>)}</View></>}
+        </View>
+
         <View className="mt-2 flex-row gap-3">
           <Pressable style={({ pressed }) => [styles.primaryButton, { backgroundColor: colors.primary }, pressed && styles.pressed]} onPress={runAudit}>
             <Text style={styles.primaryButtonText}>Mulai audit berizin</Text>
@@ -76,4 +104,4 @@ function ActionCard({ title, subtitle, button, onPress, colors }: { title: strin
   return <View style={[styles.actionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}><View className="flex-1 pr-3"><Text className="text-base font-semibold text-foreground">{title}</Text><Text className="mt-1 text-xs leading-4 text-muted">{subtitle}</Text></View><Pressable onPress={onPress} style={({ pressed }) => [styles.smallButton, { borderColor: colors.primary }, pressed && styles.pressed]}><Text style={[styles.smallButtonText, { color: colors.primary }]}>{button}</Text></Pressable></View>;
 }
 
-const styles = StyleSheet.create({ content: { paddingBottom: 32 }, statusDot: { width: 12, height: 12, borderRadius: 6 }, hero: { marginTop: 22, borderWidth: 1, borderRadius: 24, padding: 20 }, eyebrow: { fontSize: 11, fontWeight: "800", letterSpacing: 1.2 }, metric: { flex: 1, marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 14 }, metricIcon: { fontSize: 10, fontWeight: "800", letterSpacing: 1 }, primaryButton: { flex: 1, minHeight: 48, borderRadius: 16, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, primaryButtonText: { color: "#06120F", fontWeight: "800", fontSize: 13 }, secondaryButton: { flex: 1, minHeight: 48, borderRadius: 16, borderWidth: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, secondaryButtonText: { fontWeight: "700", fontSize: 13 }, actionCard: { minHeight: 86, borderWidth: 1, borderRadius: 18, padding: 16, flexDirection: "row", alignItems: "center" }, smallButton: { borderWidth: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 12 }, smallButtonText: { fontWeight: "800", fontSize: 11 }, pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] } });
+const styles = StyleSheet.create({ content: { paddingBottom: 32, width: "100%", maxWidth: 760, alignSelf: "center" }, scanCard: { marginTop: 16, borderWidth: 1, borderRadius: 20, padding: 16 }, cidrInput: { marginTop: 14, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 11, fontSize: 13 }, scanButton: { minHeight: 44, flex: 1, borderRadius: 13, alignItems: "center", justifyContent: "center" }, statusDot: { width: 12, height: 12, borderRadius: 6 }, hero: { marginTop: 22, borderWidth: 1, borderRadius: 24, padding: 20 }, eyebrow: { fontSize: 11, fontWeight: "800", letterSpacing: 1.2 }, metric: { flex: 1, marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 14 }, metricIcon: { fontSize: 10, fontWeight: "800", letterSpacing: 1 }, primaryButton: { flex: 1, minHeight: 48, borderRadius: 16, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, primaryButtonText: { color: "#06120F", fontWeight: "800", fontSize: 13 }, secondaryButton: { flex: 1, minHeight: 48, borderRadius: 16, borderWidth: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, secondaryButtonText: { fontWeight: "700", fontSize: 13 }, actionCard: { minHeight: 86, borderWidth: 1, borderRadius: 18, padding: 16, flexDirection: "row", alignItems: "center" }, smallButton: { borderWidth: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 12 }, smallButtonText: { fontWeight: "800", fontSize: 11 }, pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] } });
