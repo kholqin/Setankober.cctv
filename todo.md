@@ -109,9 +109,9 @@
 
 ## Requested update — checksum, version tag, dan changelog release
 
-- [ ] Audit workflow signing, release asset, dan status GitHub Secrets
-- [ ] Tambahkan SHA-256 checksum untuk debug dan signed release APK
-- [ ] Tambahkan changelog otomatis dari commit/tag ke GitHub Release
-- [ ] Commit perubahan pipeline dan buat tag v1.0.0
-- [ ] Jalankan serta verifikasi release signed atau laporkan prasyarat secret yang belum tersedia
+- [x] Audit workflow signing, release asset, dan status GitHub Secrets — daftar secret ditolak API integrasi; log run mengonfirmasi secret kosong
+- [x] Tambahkan SHA-256 checksum untuk debug dan signed release APK
+- [x] Tambahkan changelog otomatis dari commit/tag ke GitHub Release melalui generate_release_notes
+- [x] Commit perubahan pipeline dan buat tag v1.0.0
+- [x] Jalankan serta verifikasi release signed atau laporkan prasyarat secret yang belum tersedia — run v1.0.0 berhenti pada Prepare release signing karena secret belum diisi
 - [ ] Simpan checkpoint final dan laporkan tautan release/checksum
