@@ -106,3 +106,12 @@
 - [x] Verifikasi tautan halaman Actions/run dan instruksi unduh APK
 - [x] Simpan checkpoint final dan laporkan status build
 - [x] Publikasikan debug APK sebagai asset rolling GitHub Release agar dapat diunduh langsung sebagai file .apk
+
+## Requested update — checksum, version tag, dan changelog release
+
+- [ ] Audit workflow signing, release asset, dan status GitHub Secrets
+- [ ] Tambahkan SHA-256 checksum untuk debug dan signed release APK
+- [ ] Tambahkan changelog otomatis dari commit/tag ke GitHub Release
+- [ ] Commit perubahan pipeline dan buat tag v1.0.0
+- [ ] Jalankan serta verifikasi release signed atau laporkan prasyarat secret yang belum tersedia
+- [ ] Simpan checkpoint final dan laporkan tautan release/checksum
