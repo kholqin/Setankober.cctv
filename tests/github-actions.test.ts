@@ -18,6 +18,14 @@ describe("GitHub build status polling", () => {
     expect(summarizeBuildProgress("queued", []).progressPct).toBe(0);
   });
 
+  it("aggregates progress across jobs for the detail sheet", () => {
+    const progress = summarizeBuildProgress("in_progress", [
+      { steps: [{ name: "Lint", status: "completed" }, { name: "Gradle", status: "in_progress" }] },
+      { steps: [{ name: "Upload", status: "queued" }] },
+    ]);
+    expect(progress).toEqual({ progressPct: 33, completedSteps: 1, totalSteps: 3, currentStep: "Gradle" });
+  });
+
   it("polls active builds faster and caps retry backoff", () => {
     expect(pollingDelayMs(0, "in_progress")).toBe(15_000);
     expect(pollingDelayMs(1, "unknown")).toBe(5_000);

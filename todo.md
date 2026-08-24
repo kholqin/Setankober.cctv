@@ -89,3 +89,11 @@
 - [x] Tampilkan progress bar, persentase, langkah aktif, serta completed/total pada Build Monitor
 - [x] Tambahkan test untuk progres kosong, queued, aktif, sukses, gagal, dan dibatalkan
 - [x] Validasi responsif, commit, push, dan checkpoint
+
+## Requested update — job detail bottom sheet
+
+- [x] Perluas model status dengan daftar job, langkah, status, dan ringkasan log aman
+- [x] Tambahkan modal/bottom sheet detail yang bisa dibuka dari Build Monitor
+- [x] Tampilkan job aktif, langkah selesai, langkah pending, dan error ringkas tanpa secret
+- [x] Tambahkan test normalisasi detail job serta empty/loading/error state
+- [x] Validasi responsif, commit, push, dan checkpoint

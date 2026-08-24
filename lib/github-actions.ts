@@ -1,5 +1,19 @@
 export type BuildState = "queued" | "in_progress" | "success" | "failure" | "cancelled" | "unknown";
 
+export type BuildStep = { name: string; status: string; conclusion: string | null };
+export type BuildJob = {
+  id: number;
+  name: string;
+  status: string;
+  conclusion: string | null;
+  progressPct: number;
+  completedSteps: number;
+  totalSteps: number;
+  currentStep: string | null;
+  steps: BuildStep[];
+  htmlUrl: string | null;
+};
+
 export type BuildStatus = {
   state: BuildState;
   label: string;
@@ -13,20 +27,12 @@ export type BuildStatus = {
   completedSteps: number;
   totalSteps: number;
   currentStep: string | null;
+  jobs: BuildJob[];
 };
 
-type GitHubRun = {
-  id?: number;
-  run_number?: number;
-  status?: string;
-  conclusion?: string | null;
-  head_branch?: string | null;
-  updated_at?: string | null;
-  html_url?: string | null;
-};
-
+type GitHubRun = { id?: number; run_number?: number; status?: string; conclusion?: string | null; head_branch?: string | null; updated_at?: string | null; html_url?: string | null };
 type GitHubStep = { name?: string; status?: string; conclusion?: string | null };
-type GitHubJob = { name?: string; steps?: GitHubStep[] };
+type GitHubJob = { id?: number; name?: string; status?: string; conclusion?: string | null; html_url?: string | null; steps?: GitHubStep[] };
 
 const API_ROOT = "https://api.github.com/repos/kholqin/Setankober.cctv";
 const API_HEADERS = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
@@ -54,6 +60,24 @@ export function summarizeBuildProgress(state: BuildState, jobs: GitHubJob[]): Pi
   return { progressPct, completedSteps, totalSteps, currentStep: activeStep ?? null };
 }
 
+function summarizeJob(job: GitHubJob): BuildJob {
+  const steps = (job.steps ?? []).map((step) => ({ name: step.name ?? "Unnamed step", status: step.status ?? "unknown", conclusion: step.conclusion ?? null }));
+  const completedSteps = steps.filter((step) => step.status === "completed").length;
+  const totalSteps = steps.length;
+  return {
+    id: job.id ?? 0,
+    name: job.name ?? "Unnamed job",
+    status: job.status ?? "unknown",
+    conclusion: job.conclusion ?? null,
+    progressPct: totalSteps === 0 ? 0 : Math.min(100, Math.round((completedSteps / totalSteps) * 100)),
+    completedSteps,
+    totalSteps,
+    currentStep: steps.find((step) => step.status === "in_progress")?.name ?? null,
+    steps,
+    htmlUrl: job.html_url ?? null,
+  };
+}
+
 async function fetchJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(url, { headers: API_HEADERS, signal });
   if (!response.ok) throw new Error(`GitHub API HTTP ${response.status}`);
@@ -65,6 +89,7 @@ export async function fetchLatestBuildStatus(signal?: AbortSignal): Promise<Buil
   const run = body.workflow_runs?.[0];
   const state = normalizeBuildState(run?.status, run?.conclusion);
   const jobsBody = run?.id ? await fetchJson<{ jobs?: GitHubJob[] }>(`${API_ROOT}/actions/runs/${run.id}/jobs?per_page=100`, signal) : { jobs: [] };
+  const jobs = (jobsBody.jobs ?? []).map(summarizeJob);
   const progress = summarizeBuildProgress(state, jobsBody.jobs ?? []);
   return {
     state,
@@ -75,6 +100,7 @@ export async function fetchLatestBuildStatus(signal?: AbortSignal): Promise<Buil
     updatedAt: run?.updated_at ?? null,
     url: run?.html_url ?? null,
     checkedAt: new Date().toISOString(),
+    jobs,
     ...progress,
   };
 }
