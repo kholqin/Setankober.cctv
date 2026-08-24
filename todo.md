@@ -50,3 +50,20 @@
 - [x] Tambahkan error boundary, empty/loading states, dan retry yang jelas
 - [x] Perbarui README, CHANGELOG, dan workflow bila diperlukan
 - [x] Jalankan seluruh validasi dan commit/push perubahan ke GitHub
+
+## Requested update — build status polling and retry
+
+- [ ] Tambahkan kontrak server untuk membaca status workflow GitHub Actions repo
+- [ ] Tambahkan polling terkontrol dengan interval, backoff, batas percobaan, dan cleanup saat unmount
+- [ ] Tambahkan kartu Dashboard build status dengan state queued, in progress, success, failure, cancelled, dan unknown
+- [ ] Tambahkan tombol refresh manual dan retry yang tidak memicu build baru
+- [ ] Tambahkan test untuk normalisasi status, backoff, polling stop condition, dan error handling
+- [ ] Jalankan typecheck, lint, test, screenshot, commit, push, dan checkpoint
+
+## Requested update — public repository for build polling
+
+- [x] Audit working tree dan riwayat untuk token/password/keystore sebelum repo dipublikasi
+- [x] Ubah repository GitHub menjadi publik atas permintaan pengguna dan verifikasi metadata
+- [x] Lepaskan ketergantungan token dari status polling dengan GitHub API publik
+- [x] Implementasikan polling build dan retry interaktif di Dashboard
+- [x] Jalankan validasi, commit, push, dan checkpoint

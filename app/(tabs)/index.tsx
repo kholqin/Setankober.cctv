@@ -1,11 +1,12 @@
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useCctv } from "@/lib/cctv-context";
 import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
 import { scanAuthorizedNetwork, type ScanResult } from "@/lib/network-scan";
+import { fetchLatestBuildStatus, pollingDelayMs, type BuildStatus } from "@/lib/github-actions";
 
 export default function HomeScreen() {
   const colors = useColors();
@@ -18,6 +19,34 @@ export default function HomeScreen() {
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
   const [scanResults, setScanResults] = useState<ScanResult[]>([]);
   const scanRun = useRef(0);
+  const [buildStatus, setBuildStatus] = useState<BuildStatus | null>(null);
+  const [buildError, setBuildError] = useState<string | null>(null);
+  const [buildAttempt, setBuildAttempt] = useState(0);
+  const [buildRefreshKey, setBuildRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let stopped = false;
+    const load = async (attempt: number) => {
+      setBuildAttempt(attempt);
+      try {
+        const next = await fetchLatestBuildStatus(controller.signal);
+        if (stopped) return;
+        setBuildStatus(next);
+        setBuildError(null);
+        if (next.state === "queued" || next.state === "in_progress") timer = setTimeout(() => load(0), pollingDelayMs(0, next.state));
+      } catch (error) {
+        if (stopped || controller.signal.aborted) return;
+        setBuildError(error instanceof Error ? error.message : "Status build tidak dapat dibaca.");
+        if (attempt < 3) timer = setTimeout(() => load(attempt + 1), pollingDelayMs(attempt + 1, "unknown"));
+      }
+    };
+    load(0);
+    return () => { stopped = true; controller.abort(); if (timer) clearTimeout(timer); };
+  }, [buildRefreshKey]);
+
+  const refreshBuildStatus = () => { setBuildStatus(null); setBuildError(null); setBuildRefreshKey((value) => value + 1); };
 
   const runScan = async () => {
     if (!authorized) { Alert.alert("Scan dikunci", "Aktifkan otorisasi untuk jaringan privat Anda terlebih dahulu."); return; }
@@ -70,6 +99,8 @@ export default function HomeScreen() {
 
         <View style={[styles.postureCard, { backgroundColor: colors.surface, borderColor: colors.border }]}><View className="flex-row items-center justify-between"><Text style={[styles.eyebrow, { color: posture.color }]}>SECURITY POSTURE</Text><Text style={{ color: posture.color, fontSize: 11, fontWeight: "800" }}>{posture.label}</Text></View><Text style={{ color: colors.muted, marginTop: 8, fontSize: 12, lineHeight: 18 }}>{posture.copy}</Text></View>
 
+        <View style={[styles.buildCard, { backgroundColor: colors.surface, borderColor: colors.border }]}><View className="flex-row items-center justify-between"><View><Text style={[styles.eyebrow, { color: colors.primary }]}>BUILD MONITOR</Text><Text className="mt-1 text-base font-bold text-foreground">Android APK pipeline</Text></View><Text style={{ color: buildStatus ? buildStateColor(buildStatus.state, colors) : colors.muted, fontSize: 11, fontWeight: "800" }}>{buildStatus?.label ?? (buildError ? "ERROR" : "CHECKING")}</Text></View><Text style={{ color: colors.muted, marginTop: 8, fontSize: 12, lineHeight: 18 }}>{buildStatus ? `Run #${buildStatus.runNumber ?? "—"} · branch ${buildStatus.branch ?? "—"}${buildStatus.state === "in_progress" || buildStatus.state === "queued" ? " · polling otomatis 15 detik" : ""}` : buildError ? `${buildError} · retry ${buildAttempt}/3` : "Membaca status workflow GitHub Actions publik…"}</Text><Pressable onPress={refreshBuildStatus} style={({ pressed }) => [styles.refreshButton, { borderColor: colors.primary }, pressed && styles.pressed]}><Text style={{ color: colors.primary, fontWeight: "800", fontSize: 12 }}>{buildError ? "Retry status" : "Perbarui status"}</Text></Pressable></View>
+
         <View style={[styles.scanCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <View className="flex-row items-center justify-between"><View><Text style={[styles.eyebrow, { color: colors.primary }]}>LOCAL DISCOVERY</Text><Text className="mt-1 text-base font-bold text-foreground">Scan jaringan berizin</Text></View>{scanState === "scanning" ? <ActivityIndicator color={colors.primary} /> : <Text style={{ color: colors.muted, fontSize: 11 }}>{scanResults.length} online</Text>}</View>
           <TextInput value={cidr} onChangeText={setCidr} editable={scanState !== "scanning"} autoCapitalize="none" autoCorrect={false} placeholder="192.168.1.0/29" placeholderTextColor={colors.muted} style={[styles.cidrInput, { borderColor: colors.border, color: colors.foreground }]} />
@@ -99,6 +130,8 @@ export default function HomeScreen() {
   );
 }
 
+function buildStateColor(state: BuildStatus["state"], colors: ReturnType<typeof useColors>) { return state === "success" ? colors.success : state === "failure" || state === "cancelled" ? colors.error : state === "queued" || state === "in_progress" ? colors.warning : colors.muted; }
+
 function Metric({ label, value, icon, colors }: { label: string; value: string; icon: string; colors: ReturnType<typeof useColors> }) {
   return <View style={[styles.metric, { backgroundColor: colors.surface, borderColor: colors.border }]}><Text style={[styles.metricIcon, { color: colors.primary }]}>{icon}</Text><Text className="mt-2 text-xl font-bold text-foreground">{value}</Text><Text className="mt-1 text-xs text-muted">{label}</Text></View>;
 }
@@ -107,4 +140,4 @@ function ActionCard({ title, subtitle, button, onPress, colors }: { title: strin
   return <View style={[styles.actionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}><View className="flex-1 pr-3"><Text className="text-base font-semibold text-foreground">{title}</Text><Text className="mt-1 text-xs leading-4 text-muted">{subtitle}</Text></View><Pressable onPress={onPress} style={({ pressed }) => [styles.smallButton, { borderColor: colors.primary }, pressed && styles.pressed]}><Text style={[styles.smallButtonText, { color: colors.primary }]}>{button}</Text></Pressable></View>;
 }
 
-const styles = StyleSheet.create({ postureCard: { marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 16 }, content: { paddingBottom: 32, width: "100%", maxWidth: 760, alignSelf: "center" }, scanCard: { marginTop: 16, borderWidth: 1, borderRadius: 20, padding: 16 }, cidrInput: { marginTop: 14, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 11, fontSize: 13 }, scanButton: { minHeight: 44, flex: 1, borderRadius: 13, alignItems: "center", justifyContent: "center" }, statusDot: { width: 12, height: 12, borderRadius: 6 }, hero: { marginTop: 22, borderWidth: 1, borderRadius: 24, padding: 20 }, eyebrow: { fontSize: 11, fontWeight: "800", letterSpacing: 1.2 }, metric: { flex: 1, marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 14 }, metricIcon: { fontSize: 10, fontWeight: "800", letterSpacing: 1 }, primaryButton: { flex: 1, minHeight: 48, borderRadius: 16, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, primaryButtonText: { color: "#06120F", fontWeight: "800", fontSize: 13 }, secondaryButton: { flex: 1, minHeight: 48, borderRadius: 16, borderWidth: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, secondaryButtonText: { fontWeight: "700", fontSize: 13 }, actionCard: { minHeight: 86, borderWidth: 1, borderRadius: 18, padding: 16, flexDirection: "row", alignItems: "center" }, smallButton: { borderWidth: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 12 }, smallButtonText: { fontWeight: "800", fontSize: 11 }, pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] } });
+const styles = StyleSheet.create({ buildCard: { marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 16 }, refreshButton: { marginTop: 12, minHeight: 38, borderWidth: 1, borderRadius: 11, alignItems: "center", justifyContent: "center" }, postureCard: { marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 16 }, content: { paddingBottom: 32, width: "100%", maxWidth: 760, alignSelf: "center" }, scanCard: { marginTop: 16, borderWidth: 1, borderRadius: 20, padding: 16 }, cidrInput: { marginTop: 14, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 11, fontSize: 13 }, scanButton: { minHeight: 44, flex: 1, borderRadius: 13, alignItems: "center", justifyContent: "center" }, statusDot: { width: 12, height: 12, borderRadius: 6 }, hero: { marginTop: 22, borderWidth: 1, borderRadius: 24, padding: 20 }, eyebrow: { fontSize: 11, fontWeight: "800", letterSpacing: 1.2 }, metric: { flex: 1, marginTop: 14, borderWidth: 1, borderRadius: 18, padding: 14 }, metricIcon: { fontSize: 10, fontWeight: "800", letterSpacing: 1 }, primaryButton: { flex: 1, minHeight: 48, borderRadius: 16, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, primaryButtonText: { color: "#06120F", fontWeight: "800", fontSize: 13 }, secondaryButton: { flex: 1, minHeight: 48, borderRadius: 16, borderWidth: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 12 }, secondaryButtonText: { fontWeight: "700", fontSize: 13 }, actionCard: { minHeight: 86, borderWidth: 1, borderRadius: 18, padding: 16, flexDirection: "row", alignItems: "center" }, smallButton: { borderWidth: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 12 }, smallButtonText: { fontWeight: "800", fontSize: 11 }, pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] } });
