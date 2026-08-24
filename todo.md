@@ -67,3 +67,10 @@
 - [x] Lepaskan ketergantungan token dari status polling dengan GitHub API publik
 - [x] Implementasikan polling build dan retry interaktif di Dashboard
 - [x] Jalankan validasi, commit, push, dan checkpoint
+
+## Requested update — reliable APK pipeline and release signing
+
+- [ ] Audit log kegagalan Gradle terbaru dan perbaiki penyebab build/cancel
+- [ ] Tambahkan tombol membuka halaman run GitHub dari Build Monitor
+- [ ] Tambahkan jalur release signing berbasis GitHub Secrets tanpa menyimpan keystore di repo
+- [ ] Validasi debug APK, release workflow, test, commit, push, dan checkpoint

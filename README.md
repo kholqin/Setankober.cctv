@@ -46,3 +46,17 @@ Kode dirilis di bawah MIT License. Penggunaan aplikasi tetap tunduk pada hukum, 
 ## Kontribusi
 
 Pull request harus menyertakan pengujian yang relevan, tidak menambahkan kapabilitas eksploitasi, dan menjelaskan dampak privasi atau keamanan. Fitur jaringan baru harus bersifat non-destruktif, terbatas pada aset berizin, dan memiliki guardrail yang dapat diaudit.
+
+## Release signing melalui GitHub Secrets
+
+Workflow debug tidak membutuhkan signing secret. Untuk APK release, siapkan keystore PKCS12 di komputer pengelola dan tambahkan empat repository secrets berikut melalui **Settings → Secrets and variables → Actions**: `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, dan `ANDROID_KEY_PASSWORD`. Jangan commit file keystore atau mencetak password ke log.
+
+Contoh pembuatan keystore lokal:
+
+```bash
+keytool -genkeypair -v -storetype PKCS12 -keystore release.keystore \
+  -alias setankober_release -keyalg RSA -keysize 2048 -validity 10000
+base64 -w0 release.keystore
+```
+
+Masukkan output base64 sebagai `ANDROID_KEYSTORE_B64`. Gunakan password dan alias yang sama pada tiga secret lainnya. Setelah secret tersedia, buat tag `v1.0.1`; workflow akan membangun `app-release.apk` yang signed, mengunggah artifact, dan menerbitkannya sebagai GitHub Release asset. Token integrasi saat ini tidak memiliki permission `Actions secrets: write`, sehingga secret release harus ditambahkan oleh pemilik repository dari halaman Settings GitHub.
