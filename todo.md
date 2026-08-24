@@ -97,3 +97,11 @@
 - [x] Tampilkan job aktif, langkah selesai, langkah pending, dan error ringkas tanpa secret
 - [x] Tambahkan test normalisasi detail job serta empty/loading/error state
 - [x] Validasi responsif, commit, push, dan checkpoint
+
+## Requested update — commit semua dan APK unduh dari GitHub
+
+- [ ] Audit perubahan lokal, workflow Android, dan konfigurasi artifact APK
+- [ ] Commit dan push seluruh perubahan terbaru ke repository GitHub publik
+- [ ] Jalankan workflow native Gradle dan pastikan debug APK terunggah sebagai artifact
+- [ ] Verifikasi tautan halaman Actions/run dan instruksi unduh APK
+- [ ] Simpan checkpoint final dan laporkan status build
