@@ -74,3 +74,10 @@
 - [x] Tambahkan tombol membuka halaman run GitHub dari Build Monitor
 - [x] Tambahkan jalur release signing berbasis GitHub Secrets tanpa menyimpan keystore di repo — workflow siap; secrets belum dapat dibuat oleh token integrasi
 - [x] Validasi debug APK, release workflow, test, commit, push, dan checkpoint — debug workflow berhasil; release menunggu secrets
+
+## Requested update — cyber polling loading animation
+
+- [x] Tambahkan indikator loading cyber dark saat status build diperiksa atau aktif dipolling
+- [x] Hentikan animasi otomatis saat status build selesai, gagal, dibatalkan, atau layar ditutup
+- [x] Tambahkan test perilaku state loading dan verifikasi visual responsif
+- [x] Commit, push, dan checkpoint perubahan
