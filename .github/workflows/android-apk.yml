@@ -55,7 +55,7 @@ jobs:
         run: ./gradlew assembleDebug --no-daemon --max-workers=2 --console=plain --stacktrace
       - name: Generate debug APK checksum
         working-directory: android
-        run: sha256sum app-debug.apk > app-debug.apk.sha256
+        run: cd app/build/outputs/apk/debug && sha256sum app-debug.apk > app-debug.apk.sha256
       - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
