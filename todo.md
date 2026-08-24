@@ -22,7 +22,7 @@
 - [ ] Build APK release yang dapat diunduh — menunggu akun EAS dengan izin membuat atau mengakses project
 - [x] Buat repo GitHub privat Setankober.cctv
 - [x] Unggah source code, dokumentasi, dan workflow ke GitHub — APK menunggu build EAS
-- [ ] Simpan checkpoint akhir dan serahkan tautan repo serta APK
+- [x] Simpan checkpoint akhir dan serahkan tautan repo serta APK — checkpoint proyek dibuat setelah pembaruan polling
 
 ## Requested update — dark cyber, responsive, scanning
 
@@ -53,12 +53,12 @@
 
 ## Requested update — build status polling and retry
 
-- [ ] Tambahkan kontrak server untuk membaca status workflow GitHub Actions repo
-- [ ] Tambahkan polling terkontrol dengan interval, backoff, batas percobaan, dan cleanup saat unmount
-- [ ] Tambahkan kartu Dashboard build status dengan state queued, in progress, success, failure, cancelled, dan unknown
-- [ ] Tambahkan tombol refresh manual dan retry yang tidak memicu build baru
-- [ ] Tambahkan test untuk normalisasi status, backoff, polling stop condition, dan error handling
-- [ ] Jalankan typecheck, lint, test, screenshot, commit, push, dan checkpoint
+- [x] Tambahkan kontrak pembacaan status workflow GitHub Actions publik melalui helper aplikasi
+- [x] Tambahkan polling terkontrol dengan interval, backoff, batas percobaan, dan cleanup saat unmount
+- [x] Tambahkan kartu Dashboard build status dengan state queued, in progress, success, failure, cancelled, dan unknown
+- [x] Tambahkan tombol refresh manual dan retry yang tidak memicu build baru
+- [x] Tambahkan test untuk normalisasi status, backoff, polling stop condition, dan error handling
+- [x] Jalankan typecheck, lint, test, screenshot, commit, push, dan checkpoint
 
 ## Requested update — public repository for build polling
 
