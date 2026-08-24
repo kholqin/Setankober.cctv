@@ -70,7 +70,7 @@
 
 ## Requested update — reliable APK pipeline and release signing
 
-- [ ] Audit log kegagalan Gradle terbaru dan perbaiki penyebab build/cancel
-- [ ] Tambahkan tombol membuka halaman run GitHub dari Build Monitor
-- [ ] Tambahkan jalur release signing berbasis GitHub Secrets tanpa menyimpan keystore di repo
-- [ ] Validasi debug APK, release workflow, test, commit, push, dan checkpoint
+- [x] Audit log kegagalan Gradle terbaru dan perbaiki penyebab build/cancel
+- [x] Tambahkan tombol membuka halaman run GitHub dari Build Monitor
+- [x] Tambahkan jalur release signing berbasis GitHub Secrets tanpa menyimpan keystore di repo — workflow siap; secrets belum dapat dibuat oleh token integrasi
+- [x] Validasi debug APK, release workflow, test, commit, push, dan checkpoint — debug workflow berhasil; release menunggu secrets
