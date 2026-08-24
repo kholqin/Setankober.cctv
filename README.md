@@ -33,7 +33,7 @@ pnpm dev:metro
 
 ## Build APK
 
-Build APK sekarang memakai **native Gradle langsung di GitHub Actions tanpa EAS**. Jalankan workflow **Android APK (Native Gradle)** dari tab Actions. Setelah selesai, buka halaman workflow run dan unduh artifact `Setankober-cctv-debug-apk`. Jika Anda membuat tag `v1.0.1`, workflow juga mengunggah APK sebagai asset pada GitHub Release. APK debug cocok untuk pengujian perangkat; release production memerlukan signing keystore yang disimpan sebagai GitHub Secrets. Build lokal dapat dicoba dengan `cd android && ./gradlew assembleDebug`, tetapi runner GitHub direkomendasikan karena membutuhkan memori lebih besar.
+Build APK sekarang memakai **native Gradle langsung di GitHub Actions tanpa EAS**. Setiap push ke `main` membangun debug APK dan checksum SHA-256. Setelah selesai, buka halaman workflow run dan unduh artifact `Setankober-cctv-debug-apk`. Tag `v1.0.0` menghasilkan rolling GitHub Release berisi APK debug/unsigned, file `.sha256`, dan changelog otomatis. APK ini ditujukan untuk pengujian perangkat dan bukan build production signed. Build lokal dapat dicoba dengan `cd android && ./gradlew assembleDebug`, tetapi runner GitHub direkomendasikan karena membutuhkan memori lebih besar.
 
 ## Struktur singkat
 
@@ -47,16 +47,8 @@ Kode dirilis di bawah MIT License. Penggunaan aplikasi tetap tunduk pada hukum, 
 
 Pull request harus menyertakan pengujian yang relevan, tidak menambahkan kapabilitas eksploitasi, dan menjelaskan dampak privasi atau keamanan. Fitur jaringan baru harus bersifat non-destruktif, terbatas pada aset berizin, dan memiliki guardrail yang dapat diaudit.
 
-## Release signing melalui GitHub Secrets
+## Status release signing
 
-Workflow debug tidak membutuhkan signing secret. Untuk APK release, siapkan keystore PKCS12 di komputer pengelola dan tambahkan empat repository secrets berikut melalui **Settings → Secrets and variables → Actions**: `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, dan `ANDROID_KEY_PASSWORD`. Jangan commit file keystore atau mencetak password ke log.
+Atas permintaan pengelola, pipeline saat ini **tidak memakai signing secrets**. Tag versi seperti `v1.0.0` menghasilkan APK debug/unsigned yang aman untuk pengujian internal, checksum SHA-256, dan generated release notes. APK tersebut tidak boleh diperlakukan sebagai build production signed.
 
-Contoh pembuatan keystore lokal:
-
-```bash
-keytool -genkeypair -v -storetype PKCS12 -keystore release.keystore \
-  -alias setankober_release -keyalg RSA -keysize 2048 -validity 10000
-base64 -w0 release.keystore
-```
-
-Masukkan output base64 sebagai `ANDROID_KEYSTORE_B64`. Gunakan password dan alias yang sama pada tiga secret lainnya. Setelah secret tersedia, buat tag `v1.0.1`; workflow akan membangun `app-release.apk` yang signed, mengunggah artifact, dan menerbitkannya sebagai GitHub Release asset. Token integrasi saat ini tidak memiliki permission `Actions secrets: write`, sehingga secret release harus ditambahkan oleh pemilik repository dari halaman Settings GitHub.
+Jika signing production ingin diaktifkan pada masa mendatang, workflow dapat dikembalikan ke jalur keystore PKCS12 dengan empat repository secrets: `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, dan `ANDROID_KEY_PASSWORD`. Jangan commit file keystore atau mencetak password ke log.

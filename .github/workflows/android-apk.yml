@@ -50,19 +50,6 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Install Android SDK packages
         run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-      - name: Prepare release signing
-        if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          test -n "$ANDROID_KEYSTORE_B64" || { echo "::error::Missing ANDROID_KEYSTORE_B64 secret"; exit 1; }
-          test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "::error::Missing ANDROID_KEYSTORE_PASSWORD secret"; exit 1; }
-          test -n "$ANDROID_KEY_ALIAS" || { echo "::error::Missing ANDROID_KEY_ALIAS secret"; exit 1; }
-          test -n "$ANDROID_KEY_PASSWORD" || { echo "::error::Missing ANDROID_KEY_PASSWORD secret"; exit 1; }
-          echo "$ANDROID_KEYSTORE_B64" | base64 --decode > android/app/release.keystore
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon --max-workers=2 --console=plain --stacktrace
@@ -91,32 +78,22 @@ jobs:
         run: |
           gh release view latest-debug >/dev/null 2>&1 || gh release create latest-debug --target "$GITHUB_SHA" --title "Latest debug APK" --notes "Rolling debug APK built from main. Use this asset only for authorized testing." --prerelease
           gh release upload latest-debug android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/app-debug.apk.sha256 --clobber
-      - name: Build signed release APK
-        if: startsWith(github.ref, 'refs/tags/v')
-        working-directory: android
-        env:
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --no-daemon --max-workers=2 --console=plain --stacktrace
-      - name: Generate release APK checksum
-        if: startsWith(github.ref, 'refs/tags/v')
-        working-directory: android
-        run: sha256sum app/build/outputs/apk/release/app-release.apk > app/build/outputs/apk/release/app-release.apk.sha256
-      - name: Upload release APK artifact
+      - name: Upload unsigned APK artifact for version tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
-          name: Setankober-cctv-release-apk
+          name: Setankober-cctv-${{ github.ref_name }}-unsigned-apk
           path: |
-            android/app/build/outputs/apk/release/app-release.apk
-            android/app/build/outputs/apk/release/app-release.apk.sha256
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/debug/app-debug.apk.sha256
           if-no-files-found: error
-      - name: Publish signed GitHub Release asset
+      - name: Publish unsigned GitHub Release asset
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            android/app/build/outputs/apk/release/app-release.apk
-            android/app/build/outputs/apk/release/app-release.apk.sha256
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/debug/app-debug.apk.sha256
           generate_release_notes: true
+          body: |
+            This release contains an unsigned debug APK for authorized testing. It is not a signed production build.
