@@ -114,20 +114,20 @@
 - [x] Tambahkan changelog otomatis dari commit/tag ke GitHub Release melalui generate_release_notes
 - [x] Commit perubahan pipeline dan buat tag v1.0.0
 - [x] Jalankan serta verifikasi release signed atau laporkan prasyarat secret yang belum tersedia — run v1.0.0 berhenti pada Prepare release signing karena secret belum diisi
-- [ ] Simpan checkpoint final dan laporkan tautan release/checksum
+- [x] Simpan checkpoint final dan laporkan tautan release/checksum
 
 ## Requested update — isi signing secrets dan signed APK v1.0.0
 
-- [ ] Sediakan input aman untuk ANDROID_KEYSTORE_B64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, dan ANDROID_KEY_PASSWORD
-- [ ] Konfigurasikan empat secrets pada pipeline release GitHub tanpa mengekspos nilainya
-- [ ] Re-run workflow tag v1.0.0 setelah secrets tersedia
-- [ ] Unduh signed APK dan file checksum dari release/artifact
-- [ ] Jalankan sha256sum -c terhadap signed APK dan laporkan hasilnya
-- [ ] Simpan checkpoint final
+- [x] Sediakan input aman untuk ANDROID_KEYSTORE_B64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, dan ANDROID_KEY_PASSWORD — dibatalkan atas permintaan pengguna
+- [x] Konfigurasikan empat secrets pada pipeline release GitHub tanpa mengekspos nilainya — tidak dilakukan karena signing tidak digunakan
+- [x] Re-run workflow tag v1.0.0 setelah secrets tersedia — diganti dengan re-run unsigned tanpa secrets
+- [x] Unduh signed APK dan file checksum dari release/artifact — signed APK tidak dibuat; diganti APK unsigned
+- [x] Jalankan sha256sum -c terhadap signed APK dan laporkan hasilnya — checksum APK unsigned terverifikasi OK
+- [x] Simpan checkpoint final
 
 ## Requested update — rilis unsigned tanpa signing
 
-- [ ] Lewati konfigurasi signing pada workflow tag dan gunakan APK debug/unsigned
-- [ ] Publikasikan APK unsigned v1.0.0 beserta checksum dan changelog otomatis
-- [ ] Verifikasi unduhan dan checksum APK unsigned
-- [ ] Simpan checkpoint final
+- [x] Lewati konfigurasi signing pada workflow tag dan gunakan APK debug/unsigned
+- [x] Publikasikan APK unsigned v1.0.0 beserta checksum dan changelog otomatis
+- [x] Verifikasi unduhan dan checksum APK unsigned
+- [x] Simpan checkpoint final
