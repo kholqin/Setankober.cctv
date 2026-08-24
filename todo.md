@@ -105,3 +105,4 @@
 - [ ] Jalankan workflow native Gradle dan pastikan debug APK terunggah sebagai artifact
 - [ ] Verifikasi tautan halaman Actions/run dan instruksi unduh APK
 - [ ] Simpan checkpoint final dan laporkan status build
+- [ ] Publikasikan debug APK sebagai asset rolling GitHub Release agar dapat diunduh langsung sebagai file .apk
