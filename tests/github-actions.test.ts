@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeBuildState, pollingDelayMs } from "../lib/github-actions";
+import { normalizeBuildState, pollingDelayMs, summarizeBuildProgress } from "../lib/github-actions";
 
 describe("GitHub build status polling", () => {
   it("normalizes workflow states for the dashboard", () => {
@@ -9,6 +9,13 @@ describe("GitHub build status polling", () => {
     expect(normalizeBuildState("completed", "failure")).toBe("failure");
     expect(normalizeBuildState("completed", "cancelled")).toBe("cancelled");
     expect(normalizeBuildState("completed", "neutral")).toBe("unknown");
+  });
+
+  it("calculates progress from completed and active workflow steps", () => {
+    const progress = summarizeBuildProgress("in_progress", [{ steps: [{ name: "Validate", status: "completed" }, { name: "Build debug APK", status: "in_progress" }, { name: "Upload APK", status: "queued" }] }]);
+    expect(progress).toEqual({ progressPct: 33, completedSteps: 1, totalSteps: 3, currentStep: "Build debug APK" });
+    expect(summarizeBuildProgress("success", [{ steps: [{ status: "completed" }] }]).progressPct).toBe(100);
+    expect(summarizeBuildProgress("queued", []).progressPct).toBe(0);
   });
 
   it("polls active builds faster and caps retry backoff", () => {

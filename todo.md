@@ -81,3 +81,11 @@
 - [x] Hentikan animasi otomatis saat status build selesai, gagal, dibatalkan, atau layar ditutup
 - [x] Tambahkan test perilaku state loading dan verifikasi visual responsif
 - [x] Commit, push, dan checkpoint perubahan
+
+## Requested update — workflow build progress percentage
+
+- [x] Perluas helper GitHub Actions untuk mengambil job dan langkah workflow terbaru
+- [x] Hitung persentase progres dari langkah completed/in progress secara bounded dan deterministik
+- [x] Tampilkan progress bar, persentase, langkah aktif, serta completed/total pada Build Monitor
+- [x] Tambahkan test untuk progres kosong, queued, aktif, sukses, gagal, dan dibatalkan
+- [x] Validasi responsif, commit, push, dan checkpoint
