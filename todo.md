@@ -100,9 +100,9 @@
 
 ## Requested update — commit semua dan APK unduh dari GitHub
 
-- [ ] Audit perubahan lokal, workflow Android, dan konfigurasi artifact APK
-- [ ] Commit dan push seluruh perubahan terbaru ke repository GitHub publik
-- [ ] Jalankan workflow native Gradle dan pastikan debug APK terunggah sebagai artifact
-- [ ] Verifikasi tautan halaman Actions/run dan instruksi unduh APK
-- [ ] Simpan checkpoint final dan laporkan status build
-- [ ] Publikasikan debug APK sebagai asset rolling GitHub Release agar dapat diunduh langsung sebagai file .apk
+- [x] Audit perubahan lokal, workflow Android, dan konfigurasi artifact APK
+- [x] Commit dan push seluruh perubahan terbaru ke repository GitHub publik
+- [x] Jalankan workflow native Gradle dan pastikan debug APK terunggah sebagai artifact
+- [x] Verifikasi tautan halaman Actions/run dan instruksi unduh APK
+- [x] Simpan checkpoint final dan laporkan status build
+- [x] Publikasikan debug APK sebagai asset rolling GitHub Release agar dapat diunduh langsung sebagai file .apk
