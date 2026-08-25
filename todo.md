@@ -167,3 +167,20 @@
 - [x] Tambahkan tombol salin dan feedback berhasil/gagal
 - [x] Tambahkan test sanitizer serta validasi typecheck, lint, dan bundle
 - [x] Simpan checkpoint dan laporkan cara penggunaan
+
+## Requested update — video presentasi dan tutorial aplikasi
+
+- [x] Tulis storyboard video presentasi/demonstrasi/tutorial instalasi yang dinamis
+- [x] Siapkan naskah voice-over bahasa Indonesia dengan karakter anak generik yang ramah
+- [x] Tampilkan dashboard, scanner lokal, Build Monitor, job detail, alert, clipboard, kamera, dan Settings
+- [x] Buat pembuka tari pada detik 3–10 dan transisi yang tidak monoton — diganti format tanpa karakter sesuai permintaan terbaru
+- [x] Hasilkan video final dan tinjau keterbacaan serta guardrail keamanan
+- [x] Serahkan video presentasi dan tutorial instalasi/penggunaan — video explainer gabungan
+
+## Requested update — video realistis HD tanpa karakter
+
+- [x] Susun storyboard satu menit yang hanya menampilkan layar aplikasi dan perangkat
+- [x] Hilangkan maskot/karakter dari seluruh konsep visual
+- [x] Gunakan voice-over dan caption yang menjelaskan instalasi serta penggunaan
+- [x] Hasilkan atau susun video HD dengan transisi non-monoton
+- [x] Verifikasi video dan serahkan file final
