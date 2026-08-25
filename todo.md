@@ -184,3 +184,11 @@
 - [x] Gunakan voice-over dan caption yang menjelaskan instalasi serta penggunaan
 - [x] Hasilkan atau susun video HD dengan transisi non-monoton
 - [x] Verifikasi video dan serahkan file final
+
+## Requested update — video demo di repository GitHub
+
+- [ ] Periksa ukuran, durasi, format, dan metadata video demo
+- [ ] Siapkan asset video sebagai release asset tanpa memasukkannya ke riwayat Git
+- [ ] Tambahkan preview/link video yang mudah ditemukan di README
+- [ ] Commit dan push dokumentasi video serta verifikasi tautan publik
+- [ ] Simpan checkpoint final

@@ -35,6 +35,14 @@ pnpm dev:metro
 
 Build APK sekarang memakai **native Gradle langsung di GitHub Actions tanpa EAS**. Setiap push ke `main` membangun debug APK dan checksum SHA-256. Setelah selesai, buka halaman workflow run dan unduh artifact `Setankober-cctv-debug-apk`. Tag `v1.0.0` menghasilkan rolling GitHub Release berisi APK debug/unsigned, file `.sha256`, dan changelog otomatis. APK ini ditujukan untuk pengujian perangkat dan bukan build production signed. Build lokal dapat dicoba dengan `cd android && ./gradlew assembleDebug`, tetapi runner GitHub direkomendasikan karena membutuhkan memori lebih besar.
 
+## Demo video
+
+Video explainer realistis HD menampilkan dashboard, audit jaringan lokal berizin, Build Monitor, detail job, alert error, salin detail teknis, kamera/viewer, Settings, instalasi APK, dan batas keamanan. Klik thumbnail untuk menonton atau mengunduh video dari GitHub Release.
+
+[![Tonton demo Setankober.cctv](docs/demo-preview.jpg)](https://github.com/kholqin/Setankober.cctv/releases/download/latest-debug/setankober-cctv-explainer-hd.mp4)
+
+**[Tonton atau unduh video demo](https://github.com/kholqin/Setankober.cctv/releases/download/latest-debug/setankober-cctv-explainer-hd.mp4)** · **[Lihat semua asset release](https://github.com/kholqin/Setankober.cctv/releases/tag/latest-debug)**
+
 ## Struktur singkat
 
 `app/(tabs)/index.tsx` berisi dashboard, `app/(tabs)/cameras.tsx` mengelola kamera yang ditambahkan pengguna, `app/camera-viewer.tsx` menampilkan viewer, sedangkan `lib/cctv-context.tsx` mengelola state dan penyimpanan lokal.
