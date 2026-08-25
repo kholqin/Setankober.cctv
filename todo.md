@@ -197,3 +197,11 @@
 
 - [x] Tambahkan ringkasan fitur utama di bagian paling atas README repository
 - [x] Validasi dokumentasi lalu commit, push, dan checkpoint
+
+## Reported bug — splash screen tidak pernah selesai
+
+- [x] Audit konfigurasi splash dan root layout
+- [x] Pastikan splash disembunyikan setelah startup siap dengan fallback timeout
+- [x] Tambahkan regresi test untuk jalur startup/splash
+- [ ] Build dan verifikasi APK debug baru
+- [ ] Simpan checkpoint dan laporkan tautan instalasi ulang
