@@ -162,8 +162,8 @@
 
 ## Requested update — salin detail teknis error aman
 
-- [ ] Rancang format detail teknis tanpa URL kamera, token, password, keystore, header, atau data pribadi
-- [ ] Tambahkan sanitizer deterministik dan integrasi clipboard pada AlertBanner
-- [ ] Tambahkan tombol salin dan feedback berhasil/gagal
-- [ ] Tambahkan test sanitizer serta validasi typecheck, lint, dan bundle
-- [ ] Simpan checkpoint dan laporkan cara penggunaan
+- [x] Rancang format detail teknis tanpa URL kamera, token, password, keystore, header, atau data pribadi
+- [x] Tambahkan sanitizer deterministik dan integrasi clipboard pada AlertBanner
+- [x] Tambahkan tombol salin dan feedback berhasil/gagal
+- [x] Tambahkan test sanitizer serta validasi typecheck, lint, dan bundle
+- [x] Simpan checkpoint dan laporkan cara penggunaan
