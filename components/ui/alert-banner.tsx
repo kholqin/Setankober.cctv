@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import * as Clipboard from "expo-clipboard";
+import { sanitizeTechnicalText } from "@/lib/error-details";
 import type { ThemeColorPalette } from "@/constants/theme";
 
 type AlertTone = "error" | "warning" | "info" | "success";
@@ -11,6 +14,7 @@ type AlertBannerProps = {
   actionLabel?: string;
   onAction?: () => void;
   onDismiss?: () => void;
+  technicalDetails?: string;
 };
 
 export function AlertBanner({
@@ -21,7 +25,9 @@ export function AlertBanner({
   actionLabel,
   onAction,
   onDismiss,
+  technicalDetails,
 }: AlertBannerProps) {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const toneColor = tone === "error" ? colors.error : tone === "warning" ? colors.warning : tone === "success" ? colors.success : colors.primary;
   return (
     <View style={[styles.container, { backgroundColor: `${toneColor}16`, borderColor: `${toneColor}70` }]} accessibilityRole="alert">
@@ -29,11 +35,28 @@ export function AlertBanner({
       <View style={styles.content}>
         <Text style={[styles.title, { color: toneColor }]}>{title}</Text>
         <Text style={[styles.message, { color: colors.foreground }]}>{message}</Text>
-        {(actionLabel || onDismiss) && (
+        {(actionLabel || onDismiss || technicalDetails) && (
           <View style={styles.actions}>
             {actionLabel && onAction && (
               <Pressable onPress={onAction} style={({ pressed }) => [styles.action, { borderColor: toneColor }, pressed && styles.pressed]}>
                 <Text style={[styles.actionText, { color: toneColor }]}>{actionLabel}</Text>
+              </Pressable>
+            )}
+            {technicalDetails && (
+              <Pressable
+                onPress={async () => {
+                  try {
+                    await Clipboard.setStringAsync(sanitizeTechnicalText(technicalDetails));
+                    setCopyState("copied");
+                    setTimeout(() => setCopyState("idle"), 1800);
+                  } catch {
+                    setCopyState("failed");
+                  }
+                }}
+                style={({ pressed }) => [styles.action, { borderColor: colors.border }, pressed && styles.pressed]}
+                accessibilityLabel="Salin detail teknis error"
+              >
+                <Text style={[styles.actionText, { color: colors.foreground }]}>{copyState === "copied" ? "Tersalin" : copyState === "failed" ? "Gagal menyalin" : "Salin detail teknis"}</Text>
               </Pressable>
             )}
             {onDismiss && (

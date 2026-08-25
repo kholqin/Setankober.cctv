@@ -8,6 +8,7 @@ import { useColors } from "@/hooks/use-colors";
 import { scanAuthorizedNetwork, type ScanResult } from "@/lib/network-scan";
 import { fetchLatestBuildStatus, pollingDelayMs, type BuildStatus } from "@/lib/github-actions";
 import { AlertBanner } from "@/components/ui/alert-banner";
+import { buildTechnicalDetails } from "@/lib/error-details";
 
 export default function HomeScreen() {
   const colors = useColors();
@@ -93,9 +94,9 @@ export default function HomeScreen() {
   return (
     <ScreenContainer className="px-5 pt-4" containerClassName="bg-background">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        {storageError && <AlertBanner title="DATA LOKAL BERMASALAH" message={storageError} tone="warning" colors={colors} onDismiss={clearStorageError} />}
-        {buildError && <AlertBanner title="BUILD TIDAK DAPAT DIMUAT" message={`${buildError} Periksa koneksi internet lalu coba lagi.`} tone="error" colors={colors} actionLabel="Coba lagi" onAction={refreshBuildStatus} />}
-        {scanError && <AlertBanner title="SCAN GAGAL" message={scanError} tone="error" colors={colors} onDismiss={() => setScanError(null)} />}
+        {storageError && <AlertBanner title="DATA LOKAL BERMASALAH" message={storageError} tone="warning" colors={colors} technicalDetails={buildTechnicalDetails({ source: "local-storage", title: "DATA LOKAL BERMASALAH", message: storageError })} onDismiss={clearStorageError} />}
+        {buildError && <AlertBanner title="BUILD TIDAK DAPAT DIMUAT" message={`${buildError} Periksa koneksi internet lalu coba lagi.`} tone="error" colors={colors} technicalDetails={buildTechnicalDetails({ source: "github-actions", title: "BUILD TIDAK DAPAT DIMUAT", message: buildError, attempt: buildAttempt })} actionLabel="Coba lagi" onAction={refreshBuildStatus} />}
+        {scanError && <AlertBanner title="SCAN GAGAL" message={scanError} tone="error" colors={colors} technicalDetails={buildTechnicalDetails({ source: "authorized-local-scan", title: "SCAN GAGAL", message: scanError })} onDismiss={() => setScanError(null)} />}
 
         <View className="flex-row items-center justify-between">
           <View>

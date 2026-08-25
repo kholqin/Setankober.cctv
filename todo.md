@@ -159,3 +159,11 @@
 - [x] Tambahkan state offline/data kosong tanpa pesan error yang menyesatkan
 - [x] Tambahkan test dan validasi visual/responsif
 - [x] Simpan checkpoint dan laporkan perubahan
+
+## Requested update — salin detail teknis error aman
+
+- [ ] Rancang format detail teknis tanpa URL kamera, token, password, keystore, header, atau data pribadi
+- [ ] Tambahkan sanitizer deterministik dan integrasi clipboard pada AlertBanner
+- [ ] Tambahkan tombol salin dan feedback berhasil/gagal
+- [ ] Tambahkan test sanitizer serta validasi typecheck, lint, dan bundle
+- [ ] Simpan checkpoint dan laporkan cara penggunaan
