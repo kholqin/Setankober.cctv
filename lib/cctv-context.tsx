@@ -25,6 +25,8 @@ type CctvContextValue = {
   audits: Audit[];
   authorized: boolean;
   hydrated: boolean;
+  storageError: string | null;
+  clearStorageError: () => void;
   setAuthorized: (value: boolean) => Promise<void>;
   addCamera: (input: { name: string; url: string; location?: string }) => Promise<{ ok: boolean; message: string }>;
   removeCamera: (id: string) => Promise<void>;
@@ -51,6 +53,7 @@ export function CctvProvider({ children }: { children: React.ReactNode }) {
   const [audits, setAudits] = useState<Audit[]>([]);
   const [authorized, setAuthorizedState] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [storageError, setStorageError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -63,6 +66,9 @@ export function CctvProvider({ children }: { children: React.ReactNode }) {
       const cameraRaw = cameraResult.status === "fulfilled" ? cameraResult.value : null;
       const auditRaw = auditResult.status === "fulfilled" ? auditResult.value : null;
       const authRaw = authResult.status === "fulfilled" ? authResult.value : null;
+      if ([cameraResult, auditResult, authResult].some((result) => result.status === "rejected")) {
+        setStorageError("Sebagian data lokal tidak dapat dimuat. Data yang tersedia tetap ditampilkan; coba muat ulang aplikasi.");
+      }
       setCameras(parseArray<Camera>(cameraRaw));
       setAudits(parseArray<Audit>(auditRaw));
       setAuthorizedState(authRaw === "true");
@@ -70,6 +76,8 @@ export function CctvProvider({ children }: { children: React.ReactNode }) {
     });
     return () => { active = false; };
   }, []);
+
+  const clearStorageError = () => setStorageError(null);
 
   const setAuthorized = async (value: boolean) => {
     setAuthorizedState(value);
@@ -100,7 +108,7 @@ export function CctvProvider({ children }: { children: React.ReactNode }) {
     await AsyncStorage.setItem(AUDITS_KEY, JSON.stringify(next));
   };
 
-  const value = useMemo(() => ({ cameras, audits, authorized, hydrated, setAuthorized, addCamera, removeCamera, addAudit }), [cameras, audits, authorized, hydrated]);
+  const value = useMemo(() => ({ cameras, audits, authorized, hydrated, storageError, clearStorageError, setAuthorized, addCamera, removeCamera, addAudit }), [cameras, audits, authorized, hydrated, storageError]);
   return <CctvContext.Provider value={value}>{children}</CctvContext.Provider>;
 }
 

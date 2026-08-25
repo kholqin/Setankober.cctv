@@ -7,11 +7,12 @@ import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
 import { scanAuthorizedNetwork, type ScanResult } from "@/lib/network-scan";
 import { fetchLatestBuildStatus, pollingDelayMs, type BuildStatus } from "@/lib/github-actions";
+import { AlertBanner } from "@/components/ui/alert-banner";
 
 export default function HomeScreen() {
   const colors = useColors();
   const router = useRouter();
-  const { cameras, audits, authorized, setAuthorized, addAudit } = useCctv();
+  const { cameras, audits, authorized, setAuthorized, addAudit, storageError, clearStorageError } = useCctv();
   const scope = "Jaringan privat perangkat ini";
   const posture = !authorized ? { label: "LOCKED", copy: "Aktifkan otorisasi sebelum audit atau menambah kamera.", color: colors.warning } : cameras.length === 0 ? { label: "READY / NO ASSETS", copy: "Workspace aman, tetapi belum ada kamera berizin yang terdaftar.", color: colors.primary } : { label: "MONITORED", copy: `${cameras.length} kamera terdaftar · ${audits.length} catatan audit lokal.`, color: colors.success };
   const [cidr, setCidr] = useState("192.168.1.0/29");
@@ -21,6 +22,7 @@ export default function HomeScreen() {
   const scanRun = useRef(0);
   const [buildStatus, setBuildStatus] = useState<BuildStatus | null>(null);
   const [buildError, setBuildError] = useState<string | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
   const [buildAttempt, setBuildAttempt] = useState(0);
   const [buildRefreshKey, setBuildRefreshKey] = useState(0);
   const [jobDetailsVisible, setJobDetailsVisible] = useState(false);
@@ -71,10 +73,10 @@ export default function HomeScreen() {
     scanRun.current += 1;
     const runId = scanRun.current;
     try {
-      setScanState("scanning"); setScanResults([]); setProgress({ completed: 0, total: 0 });
+      setScanState("scanning"); setScanError(null); setScanResults([]); setProgress({ completed: 0, total: 0 });
       const results = await scanAuthorizedNetwork(cidr, (completed, total) => { if (runId === scanRun.current) setProgress({ completed, total }); });
       if (runId === scanRun.current) { setScanResults(results.filter((item) => item.status === "online")); setScanState("done"); await addAudit(`Scan lokal ${cidr}`); }
-    } catch (error) { setScanState("idle"); Alert.alert("Scope tidak valid", error instanceof Error ? error.message : "Masukkan CIDR privat yang valid."); }
+    } catch (error) { const message = error instanceof Error ? error.message : "Masukkan CIDR privat yang valid."; setScanState("idle"); setScanError(message); Alert.alert("Scan tidak dapat dijalankan", message); }
   };
 
   const cancelScan = () => { scanRun.current += 1; setScanState("idle"); setProgress({ completed: 0, total: 0 }); };
@@ -91,6 +93,10 @@ export default function HomeScreen() {
   return (
     <ScreenContainer className="px-5 pt-4" containerClassName="bg-background">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        {storageError && <AlertBanner title="DATA LOKAL BERMASALAH" message={storageError} tone="warning" colors={colors} onDismiss={clearStorageError} />}
+        {buildError && <AlertBanner title="BUILD TIDAK DAPAT DIMUAT" message={`${buildError} Periksa koneksi internet lalu coba lagi.`} tone="error" colors={colors} actionLabel="Coba lagi" onAction={refreshBuildStatus} />}
+        {scanError && <AlertBanner title="SCAN GAGAL" message={scanError} tone="error" colors={colors} onDismiss={() => setScanError(null)} />}
+
         <View className="flex-row items-center justify-between">
           <View>
             <Text className="text-sm text-muted">SECURITY CONSOLE</Text>
