@@ -195,5 +195,5 @@
 
 ## Requested update — ringkasan fitur README
 
-- [ ] Tambahkan ringkasan fitur utama di bagian paling atas README repository
-- [ ] Validasi dokumentasi lalu commit, push, dan checkpoint
+- [x] Tambahkan ringkasan fitur utama di bagian paling atas README repository
+- [x] Validasi dokumentasi lalu commit, push, dan checkpoint
