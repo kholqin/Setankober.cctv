@@ -29,7 +29,8 @@ class MainApplication : Application(), ReactApplication {
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
 
-          override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+          // GitHub-distributed APKs run standalone and must never wait for a Metro dev server.
+          override fun getUseDeveloperSupport(): Boolean = false
 
           override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
       }

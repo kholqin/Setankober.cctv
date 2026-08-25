@@ -36,6 +36,16 @@ const CAMERAS_KEY = "setankober.cctv.cameras";
 const AUDITS_KEY = "setankober.cctv.audits";
 const AUTH_KEY = "setankober.cctv.authorized";
 
+function parseArray<T>(raw: string | null): T[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed as T[] : [];
+  } catch {
+    return [];
+  }
+}
+
 export function CctvProvider({ children }: { children: React.ReactNode }) {
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [audits, setAudits] = useState<Audit[]>([]);
@@ -43,16 +53,22 @@ export function CctvProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    Promise.all([
+    let active = true;
+    Promise.allSettled([
       AsyncStorage.getItem(CAMERAS_KEY),
       AsyncStorage.getItem(AUDITS_KEY),
       SecureStore.getItemAsync(AUTH_KEY),
-    ]).then(([cameraRaw, auditRaw, authRaw]) => {
-      if (cameraRaw) setCameras(JSON.parse(cameraRaw));
-      if (auditRaw) setAudits(JSON.parse(auditRaw));
+    ]).then(([cameraResult, auditResult, authResult]) => {
+      if (!active) return;
+      const cameraRaw = cameraResult.status === "fulfilled" ? cameraResult.value : null;
+      const auditRaw = auditResult.status === "fulfilled" ? auditResult.value : null;
+      const authRaw = authResult.status === "fulfilled" ? authResult.value : null;
+      setCameras(parseArray<Camera>(cameraRaw));
+      setAudits(parseArray<Audit>(auditRaw));
       setAuthorizedState(authRaw === "true");
       setHydrated(true);
-    }).catch(() => setHydrated(true));
+    });
+    return () => { active = false; };
   }, []);
 
   const setAuthorized = async (value: boolean) => {
