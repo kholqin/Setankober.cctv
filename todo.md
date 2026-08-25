@@ -153,9 +153,9 @@
 
 ## Requested update — alert gagal memuat data
 
-- [ ] Petakan sumber data dan kategori error yang perlu ditampilkan
-- [ ] Buat komponen alert dark cyber dengan severity, pesan, dan tombol retry
-- [ ] Integrasikan alert ke polling build, storage, scanner, kamera, dan perangkat
-- [ ] Tambahkan state offline/data kosong tanpa pesan error yang menyesatkan
-- [ ] Tambahkan test dan validasi visual/responsif
-- [ ] Simpan checkpoint dan laporkan perubahan
+- [x] Petakan sumber data dan kategori error yang perlu ditampilkan
+- [x] Buat komponen alert dark cyber dengan severity, pesan, dan tombol retry
+- [x] Integrasikan alert ke polling build, storage, scanner, kamera, dan perangkat
+- [x] Tambahkan state offline/data kosong tanpa pesan error yang menyesatkan
+- [x] Tambahkan test dan validasi visual/responsif
+- [x] Simpan checkpoint dan laporkan perubahan
