@@ -187,8 +187,8 @@
 
 ## Requested update — video demo di repository GitHub
 
-- [ ] Periksa ukuran, durasi, format, dan metadata video demo
-- [ ] Siapkan asset video sebagai release asset tanpa memasukkannya ke riwayat Git
-- [ ] Tambahkan preview/link video yang mudah ditemukan di README
-- [ ] Commit dan push dokumentasi video serta verifikasi tautan publik
-- [ ] Simpan checkpoint final
+- [x] Periksa ukuran, durasi, format, dan metadata video demo — 75 detik, MP4 H.264/AAC, 720x1280, sekitar 2 MB
+- [x] Siapkan asset video sebagai release asset tanpa memasukkannya ke riwayat Git
+- [x] Tambahkan preview/link video yang mudah ditemukan di README
+- [x] Commit dan push dokumentasi video serta verifikasi tautan publik
+- [x] Simpan checkpoint final
