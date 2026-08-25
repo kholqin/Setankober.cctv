@@ -192,3 +192,8 @@
 - [x] Tambahkan preview/link video yang mudah ditemukan di README
 - [x] Commit dan push dokumentasi video serta verifikasi tautan publik
 - [x] Simpan checkpoint final
+
+## Requested update — ringkasan fitur README
+
+- [ ] Tambahkan ringkasan fitur utama di bagian paling atas README repository
+- [ ] Validasi dokumentasi lalu commit, push, dan checkpoint

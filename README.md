@@ -1,5 +1,17 @@
 # Setankober.cctv
 
+> **Setankober.cctv** adalah konsol Android dark cyber untuk audit jaringan lokal dan pemantauan CCTV berizin—dengan guardrail defensif, tanpa pemindaian internet publik, brute force, atau credential guessing.
+
+| Fitur utama | Ringkasan |
+|---|---|
+| **Dashboard keamanan** | Status otorisasi, posture keamanan, kamera, audit log, dan kesehatan build dalam satu tampilan. |
+| **Audit jaringan lokal** | Scan terbatas pada CIDR privat dengan progres, timeout, cancel, inventaris perangkat, dan pencatatan scope. |
+| **Build Monitor GitHub** | Polling status workflow, persentase progres, langkah aktif, detail job, retry, dan tautan log build. |
+| **Manajemen CCTV** | Simpan kamera milik pengguna secara lokal, validasi host privat, dan buka viewer stream sesuai dukungan perangkat. |
+| **Alert & debugging aman** | Pesan error jelas, tombol retry, serta salin detail teknis yang menyamarkan URL, token, password, dan credential. |
+| **Audit log & Safety Center** | Retensi lokal, ekspor metadata aman, privacy notice, dan panduan penggunaan berizin. |
+| **APK GitHub** | Build native Gradle tanpa EAS, artifact APK, checksum SHA-256, dan release asset yang dapat diunduh. |
+
 Setankober.cctv adalah aplikasi Android defensif untuk **audit jaringan privat dan pemantauan CCTV yang dimiliki atau telah diberi izin**. Aplikasi ini mengambil inspirasi dari dashboard keamanan pada video referensi, tetapi sengaja tidak menyediakan eksploitasi, bypass autentikasi, brute force, credential guessing, atau pemindaian internet publik.
 
 ## Fitur
