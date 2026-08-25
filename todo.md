@@ -138,7 +138,7 @@
 - [x] Reproduksi atau isolasi crash/ANR dari bundle dan log build — indikasi utama: APK debug sebelumnya masih menunggu Metro/dev server
 - [x] Terapkan perbaikan startup yang aman tanpa mengurangi guardrail aplikasi
 - [x] Tambahkan validasi regresi startup dan build APK baru
-- [ ] Verifikasi artifact/checksum dan laporkan instruksi instalasi ulang
+- [x] Verifikasi artifact/checksum dan laporkan instruksi instalasi ulang — `app-debug.apk: OK`
 
 ## Reported bug — audit full-stack dan debug APK baru
 
@@ -147,6 +147,6 @@
 - [x] Audit server/API, konfigurasi environment, dan error handling
 - [x] Jalankan typecheck, lint, unit test, bundle validation, dan pemeriksaan workflow
 - [x] Perbaiki semua bug yang ditemukan dan tambahkan regresi test
-- [ ] Build debug APK baru melalui GitHub Actions tanpa signing secrets
-- [ ] Verifikasi artifact, checksum, dan jalur instalasi APK baru
-- [ ] Simpan checkpoint final dan laporkan hasil audit
+- [x] Build debug APK baru melalui GitHub Actions tanpa signing secrets
+- [x] Verifikasi artifact, checksum, dan jalur instalasi APK baru
+- [x] Simpan checkpoint final dan laporkan hasil audit
